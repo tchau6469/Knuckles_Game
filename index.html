@@ -2,7 +2,7 @@
 <html lang = "en">
     <head>
         <meta charset = "utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
     </head>
     <body>
         <canvas id="theCanvas" width="400" height="400">
@@ -13,10 +13,54 @@
         
         <script>
             let ctx = document.querySelector("canvas").getContext("2d");
-            ctx.canvas.width  = window.innerWidth;
-            ctx.canvas.width  = window.innerHeight;
+            ctx.canvas.width  = screen.width;
+            ctx.canvas.height  = screen.height;
+            console.log(screen.width);
+            console.log(screen.height);
             let player = {x : 100, y : 100, thicc : 50, health : 100}
             let harmfulArr = [{x : 0, y : 0, thicc : 100}, {x : 0, y : 0, thicc : 100}, {x : 0, y : 0, thicc : 100}, {x : 0, y : 0, thicc : 100}, {x : 0, y : 0, thicc : 100}];
+            let healthBar = {x : 40, y : 40, length : 200, height: 50};
+            
+            function drawHealthBar() {
+                
+                let percentageHealthLength = player.health/100 * healthBar.length
+                
+                //displays the word "health" above the healthbar
+                ctx.font = "30px Comic Sans MS";
+                ctx.fillText("Health", 40, 30);
+                
+                //fills the healthbar in green based on player health
+                ctx.beginPath();
+                ctx.rect(healthBar.x, healthBar.y, percentageHealthLength, healthBar.height);
+                ctx.fillStyle = "green";
+                ctx.closePath();
+                ctx.fill();
+                
+                //displays player health percentage in the healthbar
+                ctx.beginPath();
+                ctx.fillStyle = "red";
+                ctx.fillText(player.health + "%", healthBar.x + 70, healthBar.height*1.5);
+                
+                //draws the outside healthbar outline
+                ctx.beginPath();
+                ctx.rect(healthBar.x, healthBar.y, healthBar.length, healthBar.height);
+                ctx.closePath();
+                ctx.strokeStyle = "red";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                
+            }
+            
+            //function to clear canvas and then call all other functions
+            function draw() {
+                ctx.clearRect(0,0, screen.width, screen.height);
+                drawHealthBar();
+                window.requestAnimationFrame(draw);
+            }
+            
+            
+            draw();
             
             
             
