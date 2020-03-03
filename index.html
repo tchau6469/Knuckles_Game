@@ -83,17 +83,6 @@
             //player object
             let player = {x : gameStartX, y : gameEndY -200, width : 200, height: 200, health : 100}
             
-            /*
-            knuckles.addEventListener ("load", (e)=> {
-                    ctx.drawImage(knuckles, player.x, player.y, player.width, player.height);
-                    
-            });
-            
-            
-            background.addEventListener ("load", (e) => {
-               ctx.drawImage(background, gameStartX, gameStartY) 
-            }); */
-            
             
             
             
@@ -215,12 +204,40 @@
                 }
             }
             
+            randHelpNum = () => {
+                console.log("in the random num function");
+                if (helpfulCounter < helpfulLimit) { //current number of harmful objects on screen is less than limit
+                    let randnum = Math.floor(Math.random()*10);
+                    if (helpfulArr[randnum].inGame == false) {
+                        helpfulArr[randnum].inGame = true; //random number 0 to 9
+                        helpfulCounter++;
+                    }
+                }
+            }
+            
+            
             
             decreaseHarmY = (object) => {
                 if (object.y  + fallingSpeed + object.height + 30>= gameEndY) {
                     object.inGame = false;
                     object.y = gameStartY;
                     harmfulCounter--;
+                }
+                
+
+                else {
+                    object.y += fallingSpeed;
+                }
+                
+                
+            }
+            
+            
+            decreaseHelpY = (object) => {
+                if (object.y  + fallingSpeed + object.height + 30>= gameEndY) {
+                    object.inGame = false;
+                    object.y = gameStartY;
+                    helpfulCounter--;
                 }
                 
 
@@ -250,6 +267,25 @@
                 }
             }
             
+            dropHelp = () => {
+                for (let object of helpfulArr) {
+                    if (object.inGame == true) {
+                        drawHelp(object);
+                        
+                        if (isTouching(object)) {
+                            increaseHealth(object.heal);
+                            object.inGame = false;
+                            object.y = gameStartY;
+                            helpfulCounter--;
+                        }
+                        
+                        else {
+                            decreaseHelpY(object);
+                        }
+                    }
+                }
+            }
+            
             
             //function to clear canvas and then call all other functions
             draw = () => {
@@ -261,6 +297,8 @@
                 dropHarm();
                 randHarmNum();
                 
+                dropHelp();
+                randHelpNum();
                 
                 
                 
