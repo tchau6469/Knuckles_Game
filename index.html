@@ -3,37 +3,107 @@
     <head>
         <meta charset = "utf-8">
         
+        <title>best game in the world</title>
     </head>
     <body>
         <canvas id="theCanvas" width="400" height="400">
-             This will be displayed if your browser doesn't
-             support the canvas element. The closing tag is
-             necessary.
+             CANVAS IS NOT SUPPORTED!!! :( 
         </canvas>
         
         <script>
             let ctx = document.querySelector("canvas").getContext("2d");
-            ctx.canvas.width  = screen.width;
-            ctx.canvas.height  = screen.height;
-            console.log(screen.width);
-            console.log(screen.height);
-            let player = {x : 100, y : 100, thicc : 50, health : 100}
-            let harmfulArr = [{x : 0, y : 0, thicc : 100}, {x : 0, y : 0, thicc : 100}, {x : 0, y : 0, thicc : 100}, {x : 0, y : 0, thicc : 100}, {x : 0, y : 0, thicc : 100}];
+            ctx.canvas.width  = window.innerWidth;
+            ctx.canvas.height  = window.innerHeight;
+            console.log(ctx.canvas.width);
+            console.log(ctx.canvas.height);
+            document.documentElement.style.overflow = 'hidden';
+            
+            const knuckles = new Image();
+            knuckles.src = "pictures/knuckles.png";
+            
+            const background = new Image();
+            background.src = "pictures/jungle.jpeg";
+            
+            const rage = new Image();
+            rage.src = "pictures/rage.jpg";
+            
+            const joy = new Image();
+            joy.src = "pictures/joy.jpg";
+            
+            
+            
+            //healthbar object
             let healthBar = {x : 40, y : 40, length : 200, height: 50};
             
-            function drawHealthBar() {
-                
-                let percentageHealthLength = player.health/100 * healthBar.length
-                
+            //variable that holds the starting y position of harmful objects
+            let gameStartY = healthBar.y ;
+            
+            //variable that holds the starting x position of game
+            let gameStartX = healthBar.x + healthBar.length + 20;
+            
+            //variable that holds the end x position of game
+            let gameEndY = 630;
+            
+            //variable that hold the end x position of game
+            let gameEndX = 1294;
+            
+            //array of harmful objects
+            let harmfulArr = [{x : gameStartX, y : gameStartY, radius: 40, damage : 10},
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10}, 
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10}, 
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10}, 
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10},
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10},
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10},
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10},
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10},
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10}];
+            
+            let helpfulArr = [{x : gameStartX, y : gameStartY, radius: 40, damage : 10},
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10}, 
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10}, 
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10}, 
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10},
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10},
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10},
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10},
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10},
+                              {x : gameStartX, y : gameStartY, radius: 40, damage : 10}];
+            
+             
+                              
+            
+            
+            //player object
+            let player = {x : gameStartX, y : gameEndY, width : 200, height: 200, health : 100}
+            
+            /*
+            knuckles.addEventListener ("load", (e)=> {
+                    ctx.drawImage(knuckles, player.x, player.y, player.width, player.height);
+                    
+            });
+            
+            
+            background.addEventListener ("load", (e) => {
+               ctx.drawImage(background, gameStartX, gameStartY) 
+            }); */
+            
+            
+            
+            
+            //drawing health bar function
+            drawHealthBar = () => {
+           
                 //displays the word "health" above the healthbar
+                ctx.beginPath();
+                ctx.fillStyle = "red";
                 ctx.font = "30px Comic Sans MS";
                 ctx.fillText("Health", 40, 30);
                 
                 //fills the healthbar in green based on player health
                 ctx.beginPath();
-                ctx.rect(healthBar.x, healthBar.y, percentageHealthLength, healthBar.height);
+                ctx.rect(healthBar.x, healthBar.y, player.health/100 * healthBar.length, healthBar.height);
                 ctx.fillStyle = "green";
-                ctx.closePath();
                 ctx.fill();
                 
                 //displays player health percentage in the healthbar
@@ -44,23 +114,72 @@
                 //draws the outside healthbar outline
                 ctx.beginPath();
                 ctx.rect(healthBar.x, healthBar.y, healthBar.length, healthBar.height);
-                ctx.closePath();
                 ctx.strokeStyle = "red";
                 ctx.lineWidth = 2;
                 ctx.stroke();
                 
+            }//end drawHealthBar()
+            
+            //decrease health function
+            decreaseHealth = (amount) => {
+                if (player.health > 0) {
+                    player.health -= amount;
+                }
+            }//end of decreaseHealth()
+            
+            
+            drawBackground = () => {
+                ctx.drawImage(background, gameStartX, gameStartY);
+            }
+            
+            
+            drawPlayer = (x,y) => {
+                
+                ctx.drawImage(knuckles, x,y, player.width, player.height);
                 
             }
             
-            //function to clear canvas and then call all other functions
-            function draw() {
-                ctx.clearRect(0,0, screen.width, screen.height);
-                drawHealthBar();
-                window.requestAnimationFrame(draw);
+            moveLeft = () => {
+                if (player.x > gameStartX) {
+                    player.x -= 20;
+                }
+            }//end of moveLeft()
+            
+            moveRight = () => {
+                if (player.x + player.width + 20< gameEndX) {
+                    player.x += 20;
+                }
             }
             
             
+            //function to clear canvas and then call all other functions
+            draw = () => {
+                ctx.clearRect(0,0, ctx.canvas.width, ctx.canvas.height);
+                
+                drawBackground();
+                drawPlayer(player.x,player.y - player.height);
+                drawHealthBar();
+                window.requestAnimationFrame(draw);
+                
+            }//end of draw()
+            
+            //event listener to test stuff
+            document.addEventListener("click", (e) => {decreaseHealth(5); console.log(ctx.canvas.width, ctx.canvas.height, e);});
+            
+            //event listener for left and arrow keys
+            document.addEventListener("keydown", (e) => {
+                console.log(e);
+               if (e.code == "ArrowLeft")
+                   moveLeft();
+               if (e.code == "ArrowRight") 
+                   moveRight();
+                
+            });
+                
+            
+            
             draw();
+            
             
             
             
