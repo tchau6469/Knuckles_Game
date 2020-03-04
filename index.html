@@ -18,6 +18,7 @@
             console.log(ctx.canvas.height);
             document.documentElement.style.overflow = 'hidden';
             
+//*****************initializing images below*************************************************//
             const knuckles = new Image();
             knuckles.src = "pictures/knuckles.png";
             
@@ -30,8 +31,15 @@
             const joy = new Image();
             joy.src = "pictures/joy.png";
             
+            const menu = new Image();
+            menu.src = "pictures/menu.png";
             
+            menu.addEventListener("load", e=> {
+               ctx.drawImage(menu, 0, 0 ,ctx.canvas.width, ctx.canvas.height); 
+            });
+           
             
+//*****************************************GAME VARIABLES*******************************************//            
             //healthbar object
             let healthBar = {x : 40, y : 40, length : 200, height: 50};
             
@@ -47,46 +55,240 @@
             //variable that hold the end x position of game
             let gameEndX = 1294;
             
-            //array of harmful objects
-            let harmfulArr = [{x : gameStartX + 20, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false},
-                              {x : gameStartX + 100, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false}, 
-                              {x : gameStartX + 200, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false}, 
-                              {x : gameStartX + 300, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false}, 
-                              {x : gameStartX + 400, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false},
-                              {x : gameStartX + 500, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false},
-                              {x : gameStartX + 600, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false},
-                              {x : gameStartX + 700, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false},
-                              {x : gameStartX + 800, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false},
-                              {x : gameStartX + 900, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false}];
-            let harmfulLimit = 2;
+            //variable that hold the level of the game and player score
+            let level = 1;
+            let score = 0;
+            
+            //variables that control the number of harmful objects on screen
+            let harmfulLimit = 1;
             let harmfulCounter = 0;
             
             
-            let helpfulArr = [{x : gameStartX + 20, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false},
-                              {x : gameStartX + 100, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false}, 
-                              {x : gameStartX + 200, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false}, 
-                              {x : gameStartX + 300, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false}, 
-                              {x : gameStartX + 400, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false},
-                              {x : gameStartX + 500, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false},
-                              {x : gameStartX + 600, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false},
-                              {x : gameStartX + 700, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false},
-                              {x : gameStartX + 800, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false},
-                              {x : gameStartX + 900, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false}];
-            
-            let helpfulLimit = 1;
+            //variables that control the number of helpful objects on screen
+            let helpfulLimit = 2;
             let helpfulCounter = 0;
             
-            let hello = false;
+            //variables that determine which gamescene is active
+            let onMenu = true;
+            let inGame = false;
+            let gameOver = false;
             
-            let fallingSpeed = 2;
-                             
             //player object
-            let player = {x : gameStartX, y : gameEndY -200, width : 200, height: 200, health : 100}
+            let player = {x : gameStartX, y : gameEndY - 120, width : 120, height: 120, health : 100}
+            
+            //array of harmful objects
+            let harmfulArr = [{x : gameStartX + 20, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false, fallingSpeed : 2},
+                              {x : gameStartX + 100, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false, fallingSpeed : 1}, 
+                              {x : gameStartX + 200, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false, fallingSpeed : 2}, 
+                              {x : gameStartX + 300, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false, fallingSpeed : 2}, 
+                              {x : gameStartX + 400, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false, fallingSpeed : 1},
+                              {x : gameStartX + 500, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false, fallingSpeed : 3},
+                              {x : gameStartX + 600, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false, fallingSpeed : 2},
+                              {x : gameStartX + 700, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false, fallingSpeed : 1},
+                              {x : gameStartX + 800, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false, fallingSpeed : 2},
+                              {x : gameStartX + 900, y : gameStartY, width : 50, height : 50, damage : 50, inGame : false, fallingSpeed : 3}];
             
             
             
+            let helpfulArr = [{x : gameStartX + 20, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false, fallingSpeed : 3},
+                              {x : gameStartX + 100, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false, fallingSpeed : 1}, 
+                              {x : gameStartX + 200, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false, fallingSpeed : 2}, 
+                              {x : gameStartX + 300, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false, fallingSpeed : 2}, 
+                              {x : gameStartX + 400, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false, fallingSpeed : 1},
+                              {x : gameStartX + 500, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false, fallingSpeed : 2},
+                              {x : gameStartX + 600, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false, fallingSpeed : 2},
+                              {x : gameStartX + 700, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false, fallingSpeed : 3},
+                              {x : gameStartX + 800, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false, fallingSpeed : 2},
+                              {x : gameStartX + 900, y : gameStartY, width : 50, height : 50, heal : 50, inGame : false, fallingSpeed : 1}];
             
-            //drawing health bar function
+
+//******************FUNCTIONS FOR PLAYER OBJECT***************************************************************//    
+            //function to draw the player's character, with x and y positions as parameters
+            drawPlayer = (x,y) => {
+                ctx.drawImage(knuckles, x,y, player.width, player.height);
+            }//end of drawPlayer()
+            
+            //function to move player left
+            moveLeft = () => {
+                if (player.x > gameStartX) {
+                    player.x -= 40;
+                }
+            }//end of moveLeft()
+            
+            //function to move player right
+            moveRight = () => {
+                if (player.x + player.width + 20< gameEndX) {
+                    player.x += 40;
+                }
+            }//end of moveRight()
+            
+            //decrease health function
+            decreaseHealth = (amount) => {
+                if (player.health > 0) {
+                    player.health -= amount;
+                    if (player.health < 0) { //if it goes negative, just display 0
+                        player.health = 0;
+                    }
+                    if (player.health <= 0) {
+                        inGame = false;
+                        gameOver = true;
+                        onMenu = false;
+                    }
+                }
+            }//end of decreaseHealth()
+            
+            //increase health function
+            increaseHealth = (amount) => {
+                if (player.health < 100) {
+                    player.health += amount;
+                    if (player.health > 100) { //if it goes past 100, just display 100
+                        player.health = 100;
+                    }
+                }
+            }//end of increaseHealth()
+         
+            
+//*************************************FUNCTIONS FOR HARMFUL/BENEFITIAL OBJECTS************************************//           
+            //function to draw harmful object
+            drawHarm = (objectPassed) => {
+                console.log("drawing object");
+                
+                ctx.drawImage(rage, objectPassed.x, objectPassed.y, objectPassed.width, objectPassed.height);
+            }//end of drawHarm()
+            
+            //function to draw helpful object
+            drawHelp = (objectPassed) => {
+                ctx.drawImage(joy, objectPassed.x, objectPassed.y, objectPassed.width, objectPassed.height);
+            }//end of drawHelp()
+            
+
+            //function to check if any object passed is touching the player. 
+            isTouching = (objectPassed) => {
+                if (player.x < objectPassed.x + objectPassed.width 
+                    && player.x + player.width > objectPassed.x 
+                    && player.y < objectPassed.y + objectPassed.height 
+                    && player.y + player.height > objectPassed.y) {
+                    //console.log("collision detected!!!");
+                    return true;
+                }
+                else {
+                    //console.log("no collision detected");
+                    return false
+                }
+            }//end of isTouching()
+            
+            
+            //function to determine which harmful object in the array to drop randomly
+            randHarmNum = () => {
+                console.log("in the random num function");
+                if (harmfulCounter < harmfulLimit) { //current number of harmful objects on screen is less than limit
+                    let randnum = Math.floor(Math.random()*10);
+                    if (harmfulArr[randnum].inGame == false) {
+                        harmfulArr[randnum].inGame = true; //random number 0 to 9
+                        harmfulCounter++;
+                    }
+                }
+            }//end of randHarmNum()
+            
+            randHelpNum = () => {
+                console.log("in the random num function");
+                if (helpfulCounter < helpfulLimit) { //current number of helpful objects on screen is less than limit
+                    let randnum = Math.floor(Math.random()*10);
+                    if (helpfulArr[randnum].inGame == false) {
+                        helpfulArr[randnum].inGame = true; //random number 0 to 9
+                        helpfulCounter++;
+                    }
+                }
+            }//end of randHelpNum()
+            
+            //function to decrease harmful object's Y position
+            decreaseHarmY = (object) => {
+                //check if the new position is passed the game screen limit
+                if (object.y  + object.fallingSpeed + object.height + 30>= gameEndY) {
+                    object.inGame = false;
+                    object.y = gameStartY;
+                    harmfulCounter--;
+                }
+                
+                //decrease the object's Y position by its fallingSpeed value
+                else {
+                    object.y += object.fallingSpeed + (level/4);
+                }         
+            }//end of decreaseHarmY
+            
+            //function to decrease helpful object's Y position
+            decreaseHelpY = (object) => {
+                //check if the new position is passed the game screen limit
+                if (object.y  + object.fallingSpeed + object.height + 30>= gameEndY) {
+                    object.inGame = false;
+                    object.y = gameStartY;
+                    helpfulCounter--;
+                }
+                
+                //decrease the object's Y position by its fallingSpeed value
+                else {
+                    object.y += object.fallingSpeed + (level/4);
+                }
+            }//end of decreaseHelpY()
+            
+            //function to draw every single harmful object that is currently in the game
+            dropHarm = () => {
+                //go through the harmful array to see which ones are inGame
+                for (let object of harmfulArr) {
+                    if (object.inGame == true) {
+                        drawHarm(object);
+                        
+                        //check if the object is touching the player's model
+                        if (isTouching(object)) {
+                            decreaseHealth(object.damage);
+                            object.inGame = false;
+                            object.y = gameStartY;
+                            harmfulCounter--;
+                        }
+                        
+                        //if not touching, then decrease its Y position for next iteration
+                        else {
+                            decreaseHarmY(object);
+                        }
+                    }
+                }
+            }
+            
+            //function to draw every single helpful object that is currently in the game
+            dropHelp = () => {
+                //go through the helpful array to see which ones are inGame
+                for (let object of helpfulArr) {
+                    if (object.inGame == true) {
+                        drawHelp(object);
+                        
+                        //check if the object is touching the player's model
+                        if (isTouching(object)) {
+                            increaseHealth(object.heal);
+                            object.inGame = false;
+                            object.y = gameStartY;
+                            helpfulCounter--;
+                            score++;
+                            
+                            //increase level every 5 points
+                            if (score % 5 == 0) {
+                                level++;
+                                if (harmfulLimit < 10) { //check to make sure harmfulLimit doesnt go over 10
+                                    harmfulLimit++;
+                                }    
+                            }
+                        }
+                        
+                        //if not touching, then decrease its Y position for next iteration
+                        else {
+                            decreaseHelpY(object);
+                        }
+                    }
+                }
+            }
+                 
+             
+//***********************************MISC FUNCTIONS******************************************************************//
+            //drawing health bar function AND THE SCORE!!!!!
             drawHealthBar = () => {
            
                 //displays the word "health" above the healthbar
@@ -113,206 +315,107 @@
                 ctx.lineWidth = 2;
                 ctx.stroke();
                 
+                //draws the level
+                ctx.beginPath();
+                ctx.fillText("Level: " + level, 40, healthBar.y * 2 + healthBar.height);                
+                
+                //draws the score
+                ctx.beginPath();
+                ctx.fillStyle = "red";
+                ctx.font = "30px Comic Sans MS";
+                ctx.fillText("Score: " + score, 40, healthBar.y * 3 + healthBar.height);
             }//end drawHealthBar()
-            
-            //decrease health function
-            decreaseHealth = (amount) => {
-                if (player.health > 0) {
-                    player.health -= amount;
-                    if (player.health < 0) { //if it goes negative, just display 0
-                        player.health = 0;
-                    }
-                }
-            }//end of decreaseHealth()
-            
-            //increase health function
-            increaseHealth = (amount) => {
-                if (player.health < 100) {
-                    player.health += amount;
-                    if (player.health > 100) { //if it goes past 100, just display 100
-                        player.health = 100;
-                    }
-                }
-            }
             
             //function to draw background picture
             drawBackground = () => {
                 ctx.drawImage(background, gameStartX, gameStartY);
-            }
+            }//end of drawBackground()
             
-            //function to draw the player's character, with x and y positions as parameters
-            drawPlayer = (x,y) => {
-                
-                ctx.drawImage(knuckles, x,y, player.width, player.height);
-                
-            }
-            
-            
-            //function to draw harmful object
-            drawHarm = (objectPassed) => {
-                console.log("drawing object");
-                
-                ctx.drawImage(rage, objectPassed.x, objectPassed.y, objectPassed.width, objectPassed.height);
-            }
-            
-            //function to draw helpful object
-            drawHelp = (objectPassed) => {
-                ctx.drawImage(joy, objectPassed.x, objectPassed.y, objectPassed.width, objectPassed.height);
-            }
-            
-            
-            
-            //function to move player left
-            moveLeft = () => {
-                if (player.x > gameStartX) {
-                    player.x -= 20;
-                }
-            }//end of moveLeft()
-            
-            //function to move player right
-            moveRight = () => {
-                if (player.x + player.width + 20< gameEndX) {
-                    player.x += 20;
-                }
-            }
-            
-            //function to check if any object passed is touching the player. 
-            isTouching = (objectPassed) => {
-                if (player.x < objectPassed.x + objectPassed.width 
-                    && player.x + player.width > objectPassed.x 
-                    && player.y < objectPassed.y + objectPassed.height 
-                    && player.y + player.height > objectPassed.y) {
-                    //console.log("collision detected!!!");
-                    return true;
-                }
-                else {
-                    //console.log("no collision detected");
-                    return false
-                }
-            } 
-            
-            
-            //function to determine which harmful object in the array to drop randomly
-            randHarmNum = () => {
-                console.log("in the random num function");
-                if (harmfulCounter < harmfulLimit) { //current number of harmful objects on screen is less than limit
-                    let randnum = Math.floor(Math.random()*10);
-                    if (harmfulArr[randnum].inGame == false) {
-                        harmfulArr[randnum].inGame = true; //random number 0 to 9
-                        harmfulCounter++;
-                    }
-                }
-            }
-            
-            randHelpNum = () => {
-                console.log("in the random num function");
-                if (helpfulCounter < helpfulLimit) { //current number of harmful objects on screen is less than limit
-                    let randnum = Math.floor(Math.random()*10);
-                    if (helpfulArr[randnum].inGame == false) {
-                        helpfulArr[randnum].inGame = true; //random number 0 to 9
-                        helpfulCounter++;
-                    }
-                }
-            }
-            
-            
-            
-            decreaseHarmY = (object) => {
-                if (object.y  + fallingSpeed + object.height + 30>= gameEndY) {
-                    object.inGame = false;
-                    object.y = gameStartY;
-                    harmfulCounter--;
-                }
-                
 
-                else {
-                    object.y += fallingSpeed;
-                }
+            
+            //function to draw the menu screen
+            drawMenu = () => {          
+                ctx.drawImage(menu, 0, 0, gameEndX, gameEndY);
+            }
+            
+           //function to draw game-over scene
+            drawGameOver = () => {
+                //game over word
+                ctx.beginPath();
+                ctx.fillStyle = "red";
+                ctx.font = "72px Comic Sans MS";
+                ctx.fillText("Game Over", ctx.canvas.width/3, ctx.canvas.height/3);
                 
+                //tells user score when they lost
+                ctx.beginPath();
+                ctx.fillText("Score: " + score, ctx.canvas.width/3, ctx.canvas.height/3 + 100);
+                
+                //tells user level when they lost
+                ctx.beginPath();
+                ctx.fillText("Level: " + level, ctx.canvas.width/3, ctx.canvas.height/3 + 170)
+                
+                ctx.beginPath();
+                ctx.fillText("Click mouse to play again!!", ctx.canvas.width/3, ctx.canvas.height/3 + 240 )
                 
             }
             
-            
-            decreaseHelpY = (object) => {
-                if (object.y  + fallingSpeed + object.height + 30>= gameEndY) {
-                    object.inGame = false;
-                    object.y = gameStartY;
-                    helpfulCounter--;
-                }
-                
 
-                else {
-                    object.y += fallingSpeed;
+            
+            //function to reset the game and its values
+            reset = () => {
+                
+                //resets all positions of the harmful and helpful objects
+                for (i =0; i < harmfulArr.length; i++) {
+                    
+                    //reset harmful Y positions
+                    harmfulArr[i].y = gameStartY;
+                    harmfulArr[i].inGame = false;
+                    
+                    //reset helpful Y positions
+                    helpfulArr[i].y = gameStartY;
+                    helpfulArr[i].inGame = false;
                 }
                 
+                harmfulCounter = 0;
+                helpfulCounter = 0;
+                player.x = gameStartX;
+                player.y = gameEndY - player.height;
+                player.health = 100;
+                score = 0;
+                level = 1;
+                harmfulLimit = 1;
                 
             }
             
-            dropHarm = () => {
-                for (let object of harmfulArr) {
-                    if (object.inGame == true) {
-                        drawHarm(object);
-                        
-                        if (isTouching(object)) {
-                            decreaseHealth(object.damage);
-                            object.inGame = false;
-                            object.y = gameStartY;
-                            harmfulCounter--;
-                        }
-                        
-                        else {
-                            decreaseHarmY(object);
-                        }
-                    }
-                }
-            }
-            
-            dropHelp = () => {
-                for (let object of helpfulArr) {
-                    if (object.inGame == true) {
-                        drawHelp(object);
-                        
-                        if (isTouching(object)) {
-                            increaseHealth(object.heal);
-                            object.inGame = false;
-                            object.y = gameStartY;
-                            helpfulCounter--;
-                        }
-                        
-                        else {
-                            decreaseHelpY(object);
-                        }
-                    }
-                }
-            }
-            
-            
-            //function to clear canvas and then call all other functions
+            //function to clear canvas and then call all other functions based on game status
             draw = () => {
+                //clears canvas
                 ctx.clearRect(0,0, ctx.canvas.width, ctx.canvas.height);
                 
-                
-                drawBackground();
-                
-                dropHarm();
-                randHarmNum();
-                
-                dropHelp();
-                randHelpNum();
-                
-                
-                
-                drawPlayer(player.x,player.y);
+                if (onMenu) {//if menu flag is true
+                    drawMenu();
+                }
+                else if(inGame) {//if ingame flag is true
+                    drawBackground();
+                    
+                    randHarmNum(); //get random harmful object from array
+                    dropHarm();//let it drop
+                    
+                    randHelpNum();//get random helpful object from array
+                    dropHelp();//drop it
+                    
+                    drawPlayer(player.x,player.y);
     
-                drawHealthBar();
+                    drawHealthBar();
+                }
                 
+                else if(gameOver) {
+                    drawGameOver();
+                }
                 
                 window.requestAnimationFrame(draw);
                 
             }//end of draw()
-            
-            
-            
             
             //event listener for left and arrow keys
             document.addEventListener("keydown", (e) => {
@@ -324,13 +427,19 @@
                 
             });
                 
-            
+            document.addEventListener("click", e=> {
+               if (gameOver) {
+                   reset();
+               } 
+                
+               onMenu = false;
+               inGame = true;
+               gameOver = false;
+               console.log("ingame");
+               
+            });
             
             draw();
-            
-            
-            
-            
             
         </script>
     </body>
