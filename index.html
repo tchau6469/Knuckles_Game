@@ -344,18 +344,18 @@
                 ctx.beginPath();
                 ctx.fillStyle = "red";
                 ctx.font = "72px Comic Sans MS";
-                ctx.fillText("Game Over", ctx.canvas.width/3, ctx.canvas.height/3);
+                ctx.fillText("Game Over", 100, ctx.canvas.height/4);
                 
                 //tells user score when they lost
                 ctx.beginPath();
-                ctx.fillText("Score: " + score, ctx.canvas.width/3, ctx.canvas.height/3 + 100);
+                ctx.fillText("Score: " + score, 100, ctx.canvas.height/4 + 100);
                 
                 //tells user level when they lost
                 ctx.beginPath();
-                ctx.fillText("Level: " + level, ctx.canvas.width/3, ctx.canvas.height/3 + 170)
+                ctx.fillText("Level: " + level, 100, ctx.canvas.height/4 + 170)
                 
                 ctx.beginPath();
-                ctx.fillText("Click mouse to play again!!", ctx.canvas.width/3, ctx.canvas.height/3 + 240 )
+                ctx.fillText("Click mouse to play again!!", 100, ctx.canvas.height/4 + 240 )
                 
             }
             
