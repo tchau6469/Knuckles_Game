@@ -354,8 +354,8 @@
                 ctx.beginPath();
                 ctx.fillText("Level: " + level, 100, ctx.canvas.height/4 + 170)
                 
-                ctx.beginPath();
-                ctx.fillText("Click mouse to play again!!", 100, ctx.canvas.height/4 + 240 )
+                //ctx.beginPath();
+                //ctx.fillText("Click mouse to play again!!", 100, ctx.canvas.height/4 + 240 )
                 
             }
             
@@ -394,6 +394,7 @@
                 
                 if (onMenu) {//if menu flag is true
                     drawMenu();
+                    window.requestAnimationFrame(draw);
                 }
                 else if(inGame) {//if ingame flag is true
                     drawBackground();
@@ -407,13 +408,14 @@
                     drawPlayer(player.x,player.y);
     
                     drawHealthBar();
+                    window.requestAnimationFrame(draw);
                 }
                 
                 else if(gameOver) {
                     drawGameOver();
                 }
                 
-                window.requestAnimationFrame(draw);
+                
                 
             }//end of draw()
             
